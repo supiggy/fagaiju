@@ -1,0 +1,40 @@
+
+# 数据库连接设置
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/fagaiju?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: root
+
+  http:
+    encoding:
+      charset: UTF-8
+
+  # 设置全局日期格式,如果设置这个格式,则代码中@DateTimeFormat(pattern = "dd/MM/yyyy") 无效!!
+  mvc:
+    date-format: yyyy-MM-dd
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  jackson:
+    date-format: yyyy-MM-dd
+
+  thymeleaf:
+    cache: false
+  devtools:
+    livereload:
+      port: 23333
+server:
+  port: 8785
+
+
+
+# Mybatis 配置
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml , classpath:/mybatis/mapper/extend/*.xml
+
+logging:
+  level:
+    net.suncaper.mallanli.mapper: debug

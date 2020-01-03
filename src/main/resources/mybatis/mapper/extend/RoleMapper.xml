@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scu.fagaiju.mapper.extend.RoleMapperExtend">
+    <!--    一对多查询-->
+    <resultMap id="roleMap" type="com.scu.fagaiju.common.domain.Role">
+        <id property="id" column="roleId"/>
+        <result property="role" column="role"/>
+        <result property="displayName" column="roleDisplayName"/>
+
+        <collection property="permissions" ofType="com.scu.fagaiju.common.domain.Permission" javaType="List">
+            <id property="id" column="permissionId"/>
+            <result property="permission" column="permission"/>
+            <result property="displayName" column="permissionDisplayName"/>
+            <result property="category" column="category"/>
+            <result property="url" column="url"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectRoleWithPermissions" resultMap="roleMap">
+            select r.id 'roleId',r.role 'role',r.display_name'roleDisplayName',p.id 'permissionId',
+            p.permission 'permission', p.display_name 'permissionDisplayName' ,
+            p.category 'category', p.url 'url'
+            from pt_role r left join pt_role_permission rp on r.id = rp.role_id
+            left join pt_permission p on rp.permission_id = p.id
+
+    </select>
+</mapper>

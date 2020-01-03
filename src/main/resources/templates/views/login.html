@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>登录</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css"
+          th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="plugins/bootstrap-table/bootstrap-table.css"
+          th:href="@{/plugins/bootstrap-table/bootstrap-table.css}">
+    <link rel="stylesheet" href="dist/css/adminlte.min.css" th:href="@{/dist/css/adminlte.min.css}">
+
+
+
+  </head>
+  <body class="hold-transition login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <a href="../../index2.html"><b>欢迎登录</b></a>
+      </div>
+      <!-- /.login-logo -->
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">Sign in to start your session</p>
+
+          <form action="../../index3.html" method="post" id="form1">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="用户名" id="loginName" name="loginName" value="admin">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-envelope"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="密码" id="password" name="password" value="admin">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <!-- /.col -->
+              <div class="col-4">
+                <button type="button" class="btn btn-primary btn-block" id="btn_submit">Sign In</button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+
+
+          <!-- /.login-card-body -->
+        </div>
+      </div>
+      <!-- /.login-box -->
+    </div>
+
+    <!-- jQuery -->
+    <script src="plugins/jquery/jquery.min.js" th:src="@{/plugins/jquery/jquery.min.js}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"
+            th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- AdminLTE App -->
+    <script src="/dist/js/adminlte.min.js" th:src="@{/dist/js/adminlte.min.js}"></script>
+    <script>
+        $(function () {
+            $("#btn_submit").click(function () {
+                var username = $("#loginName").val();
+                var password = $("#password").val();
+                $.ajax({
+                    type: "get",
+                    url: "/login",
+                    // contentType:"application/json",
+                    data:{"username":username,"password":password},
+                    success: function(msg){
+                        if(msg["success"]){
+                            window.location.href = "/views/user-list";
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+  </body>
+</html>

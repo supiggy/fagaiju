@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="user" type="com.scu.fagaiju.common.domain.User"*/-->
+    <form role="form" action="/save" method="post" id="userForm" th:object="${user}">
+        <div class="modal-header">
+            <h4 class="modal-title">编辑用户</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="hidden" th:field="*{id}">
+                <input type="text" class="form-control" id="username" name="username" th:field="*{username}">
+            </div>
+            <div class="form-group">
+                <label for="nickName">昵称</label>
+                <input type="text" class="form-control" id="nickName" name="nickName" th:field="*{nickName}">
+            </div>
+            <div class="form-group">
+                <label for="nickName">密码</label>
+                <input type="text" class="form-control" id="password" name="password" th:field="*{password}">
+            </div>
+            <div class="form-group">
+                <label for="nickName">手机</label>
+                <input type="text" class="form-control" id="mobile" name="mobile" th:field="*{mobile}">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" th:field="*{email}">
+            </div>
+            <div class="form-group">
+                <label for="email">是否启用账号</label>
+                <select id="disabled" name="disabled" class="form-control" th:field="*{disabled}">
+                    <option value="false">启用</option>
+                    <option value="true">禁用</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="email">是否秘书</label>
+                <select id="secretary" name="secretary" class="form-control" th:field="*{secretary}">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="email">是否联络人</label>
+                <select id="contact" name="contact" class="form-control" th:field="*{contact}">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="email">是否牵头委领导</label>
+                <select id="leader" name="leader" class="form-control" th:field="*{leader}">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            $("#userForm").ajaxForm({
+                success: function () {
+                    $('#modal-lg').modal('hide');
+                    $('#dataTable').bootstrapTable('refresh');
+                },
+                error: function () {
+                    alert('我失败了');
+                }
+            });
+        })
+
+    </script>

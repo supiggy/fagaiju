@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="role" type="com.scu.fagaiju.common.domain.Role"*/-->
+    <form action="/saverole" method="POST" id="roleForm" novalidate="novalidate" th:object="${role}">
+
+        <div class="modal-header">
+            <h4 class="modal-title">编辑用户</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="form-group">
+                    <label>角色名称（*）</label>
+                    <input type="hidden" class="form-control" id="id" name="id" value="">
+                    <input type="text" class="form-control" id="name" name="name" value="" th:field="*{role}">
+                </div>
+                <div class="form-group">
+                    <label>权限（*）</label>
+                </div>
+
+                <div class="row">
+                    <!--                        短信管理-->
+                    <div class="col-md-3">
+                        <div class="box box-default">
+                            <div class="box-header">
+                                <h3 class="box-title">短信管理</h3>
+                            </div>
+                            <div class="box-body" style="height:160px;">
+                                <div class="form-group">
+                                    <span>发送短信</span>
+                                    <input type="checkbox" name="permissionIds"
+                                           value="7" class="pull-right">
+                                </div>
+                                <div class="form-group">
+                                    <span>短信组</span>
+                                    <input type="checkbox" name="permissionIds"
+                                           value="8" class="pull-right">
+                                </div>
+                                <div class="form-group">
+                                    <span>短信模板</span>
+                                    <input type="checkbox" name="permissionIds"
+                                           value="9" class="pull-right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--                        我的项目-->
+                    <div class="col-md-3" >
+                        <div class="box box-default">
+                            <div class="box-header">
+                                <h3 class="box-title">项目进度</h3>
+                            </div>
+                            <div class="box-body" style="height:160px;">
+                                <div class="form-group">
+                                    <span>  我的项目</span>
+                                    <input type="checkbox" name="permissionIds"
+                                           value="10" class="pull-right">
+                                </div>
+                                <div class="form-group">
+                                    <span>  未上报项目</span>
+                                    <input type="checkbox" name="permissionIds"
+                                           value="11" class="pull-right">
+                                </div>
+
+                                <div class="form-group">
+                                    <span>我的上报记录</span>
+                                    <input type="checkbox" name="permissionIds"
+                                           value="12" class="pull-right">
+                                </div>
+
+                                <div class="form-group">
+                                    <span>进度评定队列</span>
+                                    <input type="checkbox" name="permissionIds"
+                                           value="13" class="pull-right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--                        用户管理-->
+                    <div class="col-md-3">
+                        <div class="box box-default">
+                            <div class="box-header">
+                                <h3 class="box-title">用户管理</h3>
+                            </div>
+                            <div class="box-body" style="height:160px;">
+                                <div class="form-group">
+                                    <span>查看</span>
+                                    <input type="checkbox" name="permissionIds"
+                                           value="14" class="pull-right">
+                                </div>
+                                <div class="form-group">
+                                    <span>重置密码</span>
+                                    <input type="checkbox" name="permissionIds"
+                                           value="15" class="pull-right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+    </form>
+    <script src="/dist/js/jquery.form.min.js" th:src="@{/dist/js/jquery.form.min.js}"></script>
+    <script>
+        $(function () {
+            $("#roleForm").ajaxForm({
+                success: function () {
+                    $('#modal-lg').modal('hide');
+                    $('#dataTable').bootstrapTable('refresh');
+                },
+                error: function () {
+                    alert('我失败了');
+                }
+            });
+        })
+    </script>

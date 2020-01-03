@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+        <title>我的首页</title>
+
+        <!-- Font Awesome Icons -->
+        <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css"
+              th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="plugins/bootstrap-table/bootstrap-table.css"
+              th:href="@{/plugins/bootstrap-table/bootstrap-table.css}">
+        <link rel="stylesheet" href="dist/css/adminlte.min.css" th:href="@{/dist/css/adminlte.min.css}">
+
+    </head>
+    <body class="hold-transition sidebar-mini">
+
+        <div class="wrapper">
+            <!-- Navbar -->
+            <div th:replace="~{common/head :: head}"></div>
+            <!-- /.navbar -->
+            <div th:replace="~{common/menu :: left_memu}"></div>
+            <!-- Main Sidebar Container -->
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1 class="m-0 text-dark">列表页</h1>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active">Starter Page</li>
+                                </ol>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container-fluid -->
+                </div>
+                <!-- /.content-header -->
+
+                <!-- Main content -->
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Bordered Table</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div id="toolbar">
+                                            <button type="button" class="btn btn-default" data-toggle="modal"
+                                                    data-target="#modal-lg" th:href="@{/addUser}">
+                                                添加用户
+                                            </button>
+                                            <button id="remove" class="btn btn-danger">
+                                                批量删除
+                                            </button>
+                                        </div>
+                                        <table id="dataTable" class="table table-bordered">
+
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- /.row -->
+                    </div><!-- /.container-fluid -->
+                </div>
+                <!-- /.content -->
+                <div class="modal fade" id="modal-lg" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+            </div>
+            <!-- /.content-wrapper -->
+
+
+        </div>
+        <!-- ./wrapper -->
+
+        <!-- REQUIRED SCRIPTS -->
+
+        <!-- jQuery -->
+        <script src="plugins/jquery/jquery.min.js" th:src="@{/plugins/jquery/jquery.min.js}"></script>
+        <!-- Bootstrap 4 -->
+        <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"
+                th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+        <!-- AdminLTE App -->
+        <script src="/dist/js/adminlte.min.js" th:src="@{/dist/js/adminlte.min.js}"></script>
+
+        <script src="plugins/bootstrap-table/bootstrap-table.js"
+                th:src="@{/plugins/bootstrap-table/bootstrap-table.js}"></script>
+        <script src="plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"
+                th:src="@{/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+
+        <script src="plugins/layer/layer.js"
+                th:src="@{/plugins/layer/layer.js}"></script>
+
+        <script th:src="@{/dist/js/jquery.form.min.js}"></script>
+
+        <script>
+            $(function () {
+
+                $('#modal-lg').on('show.bs.modal', function (e) {
+                    var url = $(e.relatedTarget).attr('href');
+                    $('.modal-content').load(url); //添加
+                });
+                window.operateEvents  = {
+                    // 更改操作的方法
+                    //删除 单行/
+                    'click .btn_del': function (e, value, row, index) {
+                        var id = row.id;
+                        layer.confirm("确认删除: "+row.username+ "  ?", {icon: 3, title:'删除操作'}, function(index){
+                            //do something
+                            $.ajax({
+                                type: "delete",
+                                url: "/user/"+id,
+                                contentType:"application/json",
+                                success: function(msg){
+                                    if(msg["success"]){
+                                        $('#dataTable').bootstrapTable('remove', {
+                                            field: 'id',
+                                            values: [id]
+                                        });
+                                        layer.msg("操作成功",{time:700});
+
+                                    }
+                                }
+                            });
+                            layer.close(index);
+                        });
+                    }
+                };
+
+                $('#dataTable').bootstrapTable('destroy').bootstrapTable({
+                    method: 'get',//定义http方法
+                    url: "/user",//url
+
+                    pagination: true, //是否分页
+                    sidePagination: 'server',//在哪分页
+                    queryParamsType: 'limit',//分页参数的类型
+                    //传递分页参数
+                    queryParams: function (params) {
+                        return {
+                            limit: params.limit, //每页多少条
+                            page: params.offset / params.limit + 1 //多少页
+                        }
+                    },
+
+                    //showRefresh: true,
+                    clickToSelect: true,//点击选中
+
+                    //工具栏
+                    buttonsAlign: 'right',//button组放在右边
+                    toolbarAlign: 'left',//tool组放在左边
+                    toolbar: '#toolbar',//工具条选择器
+
+                    striped: true,
+
+                    //数据的字段,表格数据存储位置
+                    dataField: "list",
+
+                    totalField: "total",
+                    pageNumber: 1,
+                    //search: true,
+                    pageSize: 10,
+                    pageList: "[10, 25, 50, 100, all]",
+                    //showColumns: true,
+                    paginationLoop: false,
+                    //列的定义
+                    columns: [
+                        {
+                            title: 'ID',
+                            field: 'id',
+                            visible: false,
+                            width: 160
+                        },
+                        {
+                            checkbox: true
+                        }
+                        ,
+                        {
+                            title: '用户名',
+                            field: 'username',
+                            visible: true,
+                            width: 160
+                        },
+                        {
+                            title: '密码',
+                            field: 'password',
+                            width: 160,
+                            visible:false
+                        },
+                        {
+                            title: '别名',
+                            field: 'nickName',
+                            width: 160,
+                            align: 'center'
+                        },{
+                            title: '账号启用',
+                            field: 'disabled',
+                            width: 160,
+                            align: 'center',
+                        },{
+                            title: '手机号',
+                            field: 'mobile',
+                            width: 160,
+                            align: 'center'
+                        },{
+                            title: '邮箱',
+                            field: 'email',
+                            width: 160,
+                            align: 'center'
+                        },
+                        {
+                            title: '操作',
+                            width: 80,
+                            align: 'center',
+                            formatter:function (value, row, index) {
+                                return [
+                                    '<button  type="button" class="btn btn-danger btn-xs btn_del">',
+                                    '删除' ,
+                                    '</button>',
+                                    ' <button  type="button" class="btn btn-primary btn-xs btn_update" data-toggle="modal" data-target="#modal-lg" href="/editUser?id=' + row.id + '">',
+                                    '更改',
+                                    '</button>',
+                                ].join('')
+                            },
+                            events:window.operateEvents
+                        }
+                    ],
+                    //中文
+                    locale: 'zh-CN',
+                    //当服务器返回时,一个处理函数
+                    responseHandler: function (data) {
+                        return data['data'];
+                    }
+
+                });
+
+                $("#remove").click(function () {
+                    var rows =  $('#dataTable').bootstrapTable('getSelections');
+                    var ids= $.map(rows,function (row) {
+                        return row.id;
+                    });
+
+                    if(ids.length>0){
+                        layer.confirm("确认删除", {icon: 3, title:'删除操作'}, function(index){
+                            //do something
+                            $.ajax({
+                                type: "delete",
+                                url: "/user/",
+                                contentType:"application/json",
+                                data:JSON.stringify(ids),
+                                success: function(msg){
+                                    if(msg["success"]){
+                                        $('#dataTable').bootstrapTable('remove', {
+                                            field: 'id',
+                                            values: ids
+                                        });
+                                        layer.msg("批量操作成功",{time:700});
+                                    }
+                                }
+                            });
+                            layer.close(index);
+                        });
+                    }else {
+                        layer.msg("未选中行",{time:700});
+                    }
+
+                });
+            });
+        </script>
+    </body>
+</html>
+
